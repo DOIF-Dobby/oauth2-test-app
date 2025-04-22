@@ -1,31 +1,61 @@
 "use client";
 
-interface Props {
-  data: object;
-}
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { BaseResponseContent, BaseResponseDetail, Stock } from "./types";
+import { clientFetch } from "@/libs/http/client-fetch";
 
-export default function TestUI({ data }: Props) {
-  // const { data: stocks } = useQuery({
-  //   queryKey: ["/stocks"],
-  //   queryFn: async () => {
-  //     const res = await fetch("http://localhost:8080/stocks", {
-  //       headers: {
-  //         Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTU2MTkzNTAyOTA3NzQ3NjMxNDUiLCJ1c2VySWQiOjEsImVtYWlsIjoiZG9pZi5kb2JieUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6IkRvYmJ5IiwicHJvdmlkZXJUeXBlIjoiR09PR0xFIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTc0NTIwMTkzMCwiZXhwIjoxNzQ1ODA2NzMwfQ.bqbod_5vqC5ITDoE-CVj-_t3rg4HwJsWC60Ucpf0ODw`,
-  //       },
-  //     });
+// interface Props {
+// data: BaseResponseContent<Stock>;
+// }
 
-  //     return await res.json();
-  //   },
-  //   initialData: data,
-  // });
+type Test = {
+  name: string;
+  age: number;
+};
 
-  // console.log(stocks);
+export default function TestUI() {
+  const { data: response } = useSuspenseQuery({
+    queryKey: ["/stocks"],
+    queryFn: async () => {
+      const res = await clientFetch<BaseResponseContent<Stock>>("/api/stocks");
+      return res.body;
+    },
+  });
 
-  console.log(data);
+  const api = useMutation({
+    mutationFn: async (data: Test) => {
+      const res = await clientFetch<BaseResponseDetail<Test>>("/api/test2", {
+        method: "POST",
+        body: data,
+      });
+
+      return res.body;
+    },
+    onSuccess: (res) => {
+      console.log(res);
+      console.log(res.detail.name);
+    },
+  });
+
+  console.log(response);
 
   return (
     <div>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <div>
+        {response.detail.content.map((stock) => (
+          <div key={stock.stockId}>{stock.nameKor}</div>
+        ))}
+      </div>
+      <button
+        onClick={() => {
+          api.mutate({
+            name: "MJ",
+            age: 33,
+          });
+        }}
+      >
+        호출
+      </button>
     </div>
   );
 }

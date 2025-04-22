@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
@@ -17,5 +18,12 @@ export async function GET(request: NextRequest) {
   const body = await res.json();
   console.log(body);
 
-  redirect("/");
+  const accessToken = auhorization?.replace("Bearer ", "");
+
+  if (accessToken) {
+    const cookieStore = await cookies();
+    cookieStore.set("passive-income.access-token", accessToken);
+  }
+
+  redirect("/test");
 }
