@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { tokenManager } from "@/libs/auth/token-manager";
 import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
@@ -21,8 +21,7 @@ export async function GET(request: NextRequest) {
   const accessToken = auhorization?.replace("Bearer ", "");
 
   if (accessToken) {
-    const cookieStore = await cookies();
-    cookieStore.set("passive-income.access-token", accessToken);
+    await tokenManager.setAccessToken(accessToken);
   }
 
   redirect("/test");
