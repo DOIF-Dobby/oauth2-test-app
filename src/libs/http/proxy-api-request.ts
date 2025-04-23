@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { serverFetch } from "./server-fetch";
-import { HttpMethod } from "./return-fetch-json";
+import { apiFetch } from "./api-fetch";
+import { HttpMethodOption } from "./http-option";
 
 export async function proxyApiRequest(request: NextRequest) {
   const pathname = resolvePathname(request);
@@ -19,8 +19,8 @@ export async function proxyApiRequest(request: NextRequest) {
   headers.set("Accept", "application/json");
   headers.set("Content-Type", "application/json");
 
-  const response = await serverFetch(pathname, {
-    method: request.method as HttpMethod,
+  const response = await apiFetch(pathname, {
+    method: request.method as HttpMethodOption,
     headers: headers,
     body: requestBody,
   });

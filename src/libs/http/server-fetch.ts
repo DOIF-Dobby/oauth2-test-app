@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { returnFetchJson } from "./return-fetch-json";
 
 export const serverFetch = returnFetchJson({
@@ -9,6 +8,7 @@ export const serverFetch = returnFetchJson({
   },
   interceptors: {
     request: async (args) => {
+      const { cookies } = await import("next/headers");
       const headers = new Headers(args[1]?.headers);
 
       // cookie를 사용하면 SSR 모드로 빌드

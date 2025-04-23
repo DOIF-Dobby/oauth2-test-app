@@ -1,43 +1,19 @@
 "use client";
 
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
-import { BaseResponseContent, BaseResponseDetail, Stock } from "./types";
-import { clientFetch } from "@/libs/http/client-fetch";
-
-// interface Props {
-// data: BaseResponseContent<Stock>;
-// }
-
-type Test = {
-  name: string;
-  age: number;
-};
+import { stockQueries } from "@/queries/stock/stock-queries";
+import { testMutations } from "@/queries/test/test-mutations";
 
 export default function TestUI() {
-  const { data: response } = useSuspenseQuery({
-    queryKey: ["/stocks"],
-    queryFn: async () => {
-      const res = await clientFetch<BaseResponseContent<Stock>>("/api/stocks");
-      return res.body;
-    },
-  });
+  const { data: response } = useSuspenseQuery(stockQueries.stocks());
 
   const api = useMutation({
-    mutationFn: async (data: Test) => {
-      const res = await clientFetch<BaseResponseDetail<Test>>("/api/test2", {
-        method: "POST",
-        body: data,
-      });
-
-      return res.body;
-    },
+    ...testMutations.test2(),
     onSuccess: (res) => {
       console.log(res);
       console.log(res.detail.name);
     },
   });
-
-  console.log(response);
 
   return (
     <div>

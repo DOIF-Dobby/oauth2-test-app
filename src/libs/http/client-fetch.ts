@@ -5,4 +5,13 @@ export const clientFetch = returnFetchJson({
     Accept: "application/json",
     "Content-Type": "application/json",
   },
+  interceptors: {
+    request: async (args) => {
+      const url = args[0];
+      const apiUrl =
+        typeof url === "string" ? `/api${url}` : new URL(`/api${url.pathname}`);
+
+      return [apiUrl, args[1]];
+    },
+  },
 });

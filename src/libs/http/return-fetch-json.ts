@@ -3,26 +3,24 @@ import returnFetch, {
   FetchArgs,
   ReturnFetchDefaultOptions,
 } from "return-fetch";
+import { HttpMethodOption } from "./http-option";
 
-export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
-
-type JsonRequestInit = Omit<NonNullable<FetchArgs[1]>, "body" | "method"> & {
+export type JsonRequestInit = Omit<
+  NonNullable<FetchArgs[1]>,
+  "body" | "method"
+> & {
   body?: object;
-  method?: HttpMethod;
+  method?: HttpMethodOption;
 };
 
-type ResponseGenericBody<T> = Omit<
+export type ResponseGenericBody<T> = Omit<
   Awaited<ReturnType<typeof fetch>>,
   keyof Body | "clone"
 > & {
   body: T;
 };
 
-// export type JsonResponse<T> = T extends object
-//   ? ResponseGenericBody<T>
-//   : ResponseGenericBody<string>;
-
-type JsonResponse<T = unknown> = ResponseGenericBody<T>;
+export type JsonResponse<T = unknown> = ResponseGenericBody<T>;
 
 export function returnFetchJson(args?: ReturnFetchDefaultOptions) {
   const baseFetch = returnFetch(args);
