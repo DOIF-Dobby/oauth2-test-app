@@ -1,4 +1,4 @@
-import { tokenManager } from "../../auth/token-manager";
+import { tokenManager } from "../../instances/token-manager";
 import { throwErrorResponseInterceptor } from "./interceptors";
 import { returnFetchJson } from "./return-fetch-json";
 

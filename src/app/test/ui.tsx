@@ -21,8 +21,6 @@ export default function TestUI() {
     },
   });
 
-  console.log(response);
-
   return (
     <div>
       <div>
