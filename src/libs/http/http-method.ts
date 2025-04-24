@@ -5,4 +5,4 @@ export const HttpMethod = {
   DELETE: "DELETE",
 } as const;
 
-export type HttpMethodOption = (typeof HttpMethod)[keyof typeof HttpMethod];
+export type HttpMethod = (typeof HttpMethod)[keyof typeof HttpMethod];

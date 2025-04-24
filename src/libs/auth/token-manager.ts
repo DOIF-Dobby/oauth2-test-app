@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { cookies } from "next/headers";
+import { getCookiesStore } from "../cookie/get-cookie-store";
 
 const ACCESS_TOKEN_NAME = "passive-income.access-token";
 
@@ -8,7 +8,7 @@ export const tokenManager = {
     const decoded = jwtDecode(token);
     const expires = decoded.exp ? new Date(decoded.exp * 1000) : undefined;
 
-    const cookieStore = await cookies();
+    const cookieStore = await getCookiesStore();
 
     cookieStore.set(ACCESS_TOKEN_NAME, token, {
       httpOnly: true,
@@ -16,7 +16,7 @@ export const tokenManager = {
     });
   },
   getAccessToken: async () => {
-    const cookieStore = await cookies();
+    const cookieStore = await getCookiesStore();
     return cookieStore.get(ACCESS_TOKEN_NAME);
   },
 };

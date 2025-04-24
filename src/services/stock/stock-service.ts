@@ -1,6 +1,6 @@
 import { BaseResponseContent } from "@/types/base-type";
 import { Stock } from "./stock-type";
-import { apiFetch } from "@/libs/http/api-fetch";
+import { apiFetch } from "@/libs/http/fetch/api-fetch";
 
 export const stockService = {
   getStock: async () => {

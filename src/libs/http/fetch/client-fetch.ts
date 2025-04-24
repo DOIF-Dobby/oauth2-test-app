@@ -1,3 +1,4 @@
+import { throwErrorResponseInterceptor } from "./interceptors";
 import { returnFetchJson } from "./return-fetch-json";
 
 export const clientFetch = returnFetchJson({
@@ -13,5 +14,6 @@ export const clientFetch = returnFetchJson({
 
       return [apiUrl, args[1]];
     },
+    response: throwErrorResponseInterceptor,
   },
 });

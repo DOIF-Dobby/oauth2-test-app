@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { apiFetch } from "./api-fetch";
-import { HttpMethodOption } from "./http-option";
+import { apiFetch } from "./fetch/api-fetch";
+import { HttpMethod } from "./http-method";
+import { JsonResponse } from "./fetch/return-fetch-json";
 
 export async function proxyApiRequest(request: NextRequest) {
   const pathname = resolvePathname(request);
@@ -19,18 +20,29 @@ export async function proxyApiRequest(request: NextRequest) {
   headers.set("Accept", "application/json");
   headers.set("Content-Type", "application/json");
 
-  const response = await apiFetch(pathname, {
-    method: request.method as HttpMethodOption,
-    headers: headers,
-    body: requestBody,
-  });
+  try {
+    const response = await apiFetch(pathname, {
+      method: request.method as HttpMethod,
+      headers: headers,
+      body: requestBody,
+    });
 
-  return NextResponse.json(response.body, {
-    headers: response.headers,
-    status: response.status,
-    statusText: response.statusText,
-    url: response.url,
-  });
+    return NextResponse.json(response.body, {
+      headers: response.headers,
+      status: response.status,
+      statusText: response.statusText,
+      url: response.url,
+    });
+  } catch (err) {
+    const jsonErr = err as JsonResponse;
+
+    return NextResponse.json(jsonErr.body, {
+      headers: jsonErr.headers,
+      status: jsonErr.status,
+      statusText: jsonErr.statusText,
+      url: jsonErr.url,
+    });
+  }
 }
 
 /**

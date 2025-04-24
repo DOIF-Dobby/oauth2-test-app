@@ -1,7 +1,7 @@
 import { BaseResponseDetail } from "@/types/base-type";
 import { Test } from "./test-type";
-import { HttpMethod } from "@/libs/http/http-option";
-import { apiFetch } from "@/libs/http/api-fetch";
+import { HttpMethod } from "@/libs/http/http-method";
+import { apiFetch } from "@/libs/http/fetch/api-fetch";
 
 export const testService = {
   test2: async (data: Test) => {
