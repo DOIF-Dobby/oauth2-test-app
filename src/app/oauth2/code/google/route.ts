@@ -1,4 +1,3 @@
-import { tokenManager } from "@/libs/instances/token-manager";
 import { serverFetch } from "@/libs/http/fetch/server-fetch";
 import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
@@ -6,21 +5,23 @@ import { NextRequest } from "next/server";
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
 
-  const res = await serverFetch(
-    `/oauth2/authenticate?code=${code}&provider=GOOGLE`,
-    {
-      method: "POST",
-    }
-  );
+  const res = await serverFetch(`http://localhost:8000/api/auth/login/google`, {
+    method: "POST",
+    body: {
+      authorizationCode: code,
+    },
+  });
 
-  const auhorization = res.headers.get("authorization");
-  console.log(`authorization: ${auhorization}`);
+  console.log(res.body);
 
-  const accessToken = auhorization?.replace("Bearer ", "");
+  // const auhorization = res.headers.get("authorization");
+  // console.log(`authorization: ${auhorization}`);
 
-  if (accessToken) {
-    await tokenManager.setAccessToken(accessToken);
-  }
+  // const accessToken = auhorization?.replace("Bearer ", "");
+
+  // if (accessToken) {
+  //   await tokenManager.setAccessToken(accessToken);
+  // }
 
   redirect("/test");
 }
