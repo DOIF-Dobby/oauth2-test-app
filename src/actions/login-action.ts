@@ -9,7 +9,8 @@ export async function login() {
 
   const resBody = await res.json();
 
-  const redirectUri = resBody.data;
+  const redirectUrl = resBody.data;
+  console.log(`redirectUrl: ${redirectUrl}`);
 
-  redirect(redirectUri);
+  redirect(redirectUrl);
 }
